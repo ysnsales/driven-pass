@@ -9,6 +9,7 @@ import { UsersModule } from '../users/users.module';
 @Module({
   providers: [CredentialsService, CredentialsRepository],
   controllers: [CredentialsController],
-  imports: [UsersModule]
+  imports: [UsersModule],
+  exports: [CredentialsService]
 })
 export class CredentialsModule {}

@@ -1,15 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateCredentialDto } from "./dto/create-credential.dto";
-import Cryptr from 'cryptr';
 
 @Injectable()
 export class CredentialsRepository {
+    private secret = process.env.CRYPTR_SECRET;
+    private Cryptr = require('cryptr');
+    private cryptr = new this.Cryptr(this.secret);
     constructor(private readonly prisma: PrismaService) {}
 
     createCredential(createCredentialDto: CreateCredentialDto, userId: number) {
         return this.prisma.credential.create({
             data: { ...createCredentialDto,
+                password: this.cryptr.encrypt(createCredentialDto.password),
                  userId}
         })
     }

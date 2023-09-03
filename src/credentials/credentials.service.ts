@@ -4,6 +4,9 @@ import { CreateCredentialDto } from './dto/create-credential.dto';
 
 @Injectable()
 export class CredentialsService {
+    private secret = process.env.CRYPTR_SECRET;
+    private Cryptr = require('cryptr');
+    private cryptr = new this.Cryptr(this.secret);
     constructor(private readonly credentialsRepository: CredentialsRepository){}
 
     async createCredential(createCredentialDto: CreateCredentialDto, userId: number) {
@@ -14,7 +17,10 @@ export class CredentialsService {
     }
 
     async getCredentials(userId: number) {
-        return this.credentialsRepository.getCredentials(userId);
+        const credentials = await this.credentialsRepository.getCredentials(userId);
+        return credentials.map((credential) => {
+            return { ...credential, password: this.cryptr.decrypt(credential.password) };
+          });
     }
 
     async getCredentialById(id: number, userId: number) {
@@ -23,7 +29,7 @@ export class CredentialsService {
         if(!credential) throw new NotFoundException();
         if(credential.userId !== userId) throw new ForbiddenException();
 
-        return credential;
+        return { ...credential, password: this.cryptr.decrypt(credential.password) };
     }
 
     async deleteCredential(id: number, userId: number){
