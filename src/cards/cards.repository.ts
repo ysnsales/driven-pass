@@ -4,11 +4,17 @@ import { CreateCardDto } from "./dto/create-card.dto";
 
 @Injectable()
 export class CardsRepository {
+    private secret = process.env.CRYPTR_SECRET;
+    private Cryptr = require('cryptr');
+    private cryptr = new this.Cryptr(this.secret);
   constructor(private readonly prisma: PrismaService) {} 
 
   createCard(createCardDto: CreateCardDto, userId: number){
     return this.prisma.card.create({
-        data:{ ...createCardDto, userId}
+        data:{ ...createCardDto,
+            password: this.cryptr.encrypt(createCardDto.password),
+            cvv: this.cryptr.encrypt(createCardDto.cvv),
+            userId}
     })
   }
 
