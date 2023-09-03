@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateCredentialDto } from "./dto/create-credential.dto";
-import * as bcrypt from "bcrypt";
+import Cryptr from 'cryptr';
 
 @Injectable()
 export class CredentialsRepository {
@@ -10,7 +10,6 @@ export class CredentialsRepository {
     createCredential(createCredentialDto: CreateCredentialDto, userId: number) {
         return this.prisma.credential.create({
             data: { ...createCredentialDto,
-                password: bcrypt.hashSync(createCredentialDto.password, 10),
                  userId}
         })
     }
@@ -23,5 +22,19 @@ export class CredentialsRepository {
             }
         })
     }
+
+    getCredentials(userId: number) {
+        return this.prisma.credential.findMany({
+            where: {userId}
+        })
+    }
+
+    getCredentialById(id: number) {
+        return this.prisma.credential.findFirst({
+            where: {id}
+        })
+        
+    }
 }
+
 
