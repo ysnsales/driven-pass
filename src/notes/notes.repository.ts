@@ -19,5 +19,27 @@ export class NotesRepository {
             title
         }
     })
+  }
+
+  getNotes(userId: number) {
+    return this.prisma.note.findMany({
+        where: {userId}
+    })
 }
+
+    getNoteById(id: number) {
+        return this.prisma.note.findFirst({
+            where: {id}
+        })
+        
+    }
+
+    deleteNote(id: number, userId: number){
+        return this.prisma.note.delete({
+            where:{
+                id,
+                userId
+            }
+        })
+    }
 }

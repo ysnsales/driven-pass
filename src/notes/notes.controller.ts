@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { User } from '../decorators/user.decorator';
@@ -10,10 +10,31 @@ export class NotesController {
     constructor(private readonly notesService: NotesService) {}
 
     @Post()
-    createCredential(@Body() createNoteDto: CreateNoteDto, @User() user){
+    createNote(@Body() createNoteDto: CreateNoteDto, @User() user){
         const { id } = user;
 
         return this.notesService.createNote(createNoteDto, id);
+    }
+
+    @Get()
+    getNotes(@User() user){
+        console.log(user);
+        const { id } = user;
+        return this.notesService.getNotes(id);
+    }
+
+    @Get(':id')
+    getNotesByUserId(@Param('id', ParseIntPipe) id: string, @User() user){
+        const userId = user.id;
+
+        return this.notesService.getNoteById(+id, userId);
+    }
+
+    @Delete(':id')
+    deleteNote(@Param('id', ParseIntPipe) id: string, @User() user){
+        const userId = user.id;
+
+        return this.notesService.deleteNote(+id, userId)
     }
 
 }
