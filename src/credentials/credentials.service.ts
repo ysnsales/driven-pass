@@ -25,5 +25,14 @@ export class CredentialsService {
 
         return credential;
     }
+
+    async deleteCredential(id: number, userId: number){
+        const credential = await this.credentialsRepository.getCredentialById(id);
+
+        if(!credential) throw new NotFoundException();
+        if(credential.userId !== userId) throw new ForbiddenException();
+
+        return this.credentialsRepository.deleteCredential(id, userId);
+    }
 }
 

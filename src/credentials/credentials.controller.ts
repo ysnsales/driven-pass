@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { CredentialsService } from './credentials.service';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { User } from '../decorators/user.decorator';
@@ -29,5 +29,12 @@ export class CredentialsController {
         const userId = user.id;
 
         return this.credentialService.getCredentialById(+id, userId);
+    }
+
+    @Delete(':id')
+    deleteCredential(@Param('id', ParseIntPipe) id: string, @User() user){
+        const userId = user.id;
+
+        return this.credentialService.deleteCredential(+id, userId)
     }
 }
