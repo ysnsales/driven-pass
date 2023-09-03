@@ -1,7 +1,6 @@
 import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
-
 import * as bcrypt from "bcrypt";
 import { UsersService } from '../users/users.service';
 import { SignInDto } from './dto/sign-in.dto';
@@ -48,6 +47,14 @@ export class AuthService {
     });
 
     return { token }
+  }
+
+  checkToken(token: string) {
+    const data = this.jwtService.verify(token, {
+      audience: this.AUDIENCE,
+      issuer: this.ISSUER,
+    });
+    return data;
   }
 
 }
