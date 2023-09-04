@@ -39,7 +39,7 @@ describe('UsersController (e2e', () => {
       it('Should return 409 when email is already in use', async() => {
         const user = createUser();
         await request(app.getHttpServer()).post('/users/sign-up').send(user);
-        const response = await request(app.getHttpServer()).post('/users/sign-up').send(user);
+        const response = await request(app.getHttpServer()).post('/users/sign-up').send({id: 11, email: user.email, password: user.password});
 
         expect(response.status).toEqual(HttpStatus.CONFLICT);
       });

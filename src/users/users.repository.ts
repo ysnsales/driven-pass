@@ -23,7 +23,12 @@ export class UsersRepository {
 
   createUser(createUserDto: CreateUserDto) {
     return this.prisma.user.create({
-      data: { ...createUserDto, password: bcrypt.hashSync(createUserDto.password, this.SALT) }
+      data: { ...createUserDto, password: bcrypt.hashSync(createUserDto.password, this.SALT) },
+      select: {
+        id: true,
+        email: true, 
+        password: true
+      }
     })
   }
 
