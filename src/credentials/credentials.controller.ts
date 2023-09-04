@@ -4,10 +4,11 @@ import { CreateCredentialDto } from './dto/create-credential.dto';
 import { User } from '../decorators/user.decorator';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthGuard } from '../guards/auth.guard';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthGuard)
 @ApiTags('credentials')
+@ApiBearerAuth()
 @Controller('credentials')
 export class CredentialsController {
     constructor(private readonly credentialService: CredentialsService) {}
