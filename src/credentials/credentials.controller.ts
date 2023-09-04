@@ -4,13 +4,16 @@ import { CreateCredentialDto } from './dto/create-credential.dto';
 import { User } from '../decorators/user.decorator';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthGuard } from '../guards/auth.guard';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthGuard)
+@ApiTags('credentials')
 @Controller('credentials')
 export class CredentialsController {
     constructor(private readonly credentialService: CredentialsService) {}
 
     @Post()
+    @ApiOperation({ summary: "Create a new credential" })
     createCredential(@Body() createCredentialDto: CreateCredentialDto, @User() user){
         const { id } = user;
 
@@ -18,6 +21,7 @@ export class CredentialsController {
     }
 
     @Get()
+    @ApiOperation({ summary: "Get all credentials from logged user" })
     getCredentials(@User() user){
         console.log(user);
         const { id } = user;
@@ -25,6 +29,7 @@ export class CredentialsController {
     }
 
     @Get(':id')
+    @ApiOperation({ summary: "Get a specific credential" })
     getCredentialsByUserId(@Param('id', ParseIntPipe) id: string, @User() user){
         const userId = user.id;
 
@@ -32,6 +37,7 @@ export class CredentialsController {
     }
 
     @Delete(':id')
+    @ApiOperation({ summary: "Delete a credential" })
     deleteCredential(@Param('id', ParseIntPipe) id: string, @User() user){
         const userId = user.id;
 
